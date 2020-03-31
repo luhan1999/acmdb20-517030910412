@@ -2,52 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="cf4c48c1-2f66-4093-a085-9b9b0962ff5d" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/ant.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/lib.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/acmdb-lab0.iml" beforeDir="false" afterPath="$PROJECT_DIR$/acmdb-lab0.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/depcache/dependencies.txt" beforeDir="false" afterPath="$PROJECT_DIR$/bin/depcache/dependencies.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/test/simpledb/systemtest/ScanTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/test/simpledb/systemtest/ScanTest.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/acmdb-lab0/simpledb/AbstractDbFileIterator.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/acmdb-lab0/simpledb/BufferPool.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/acmdb-lab0/simpledb/Catalog.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/acmdb-lab0/simpledb/Database.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/acmdb-lab0/simpledb/DbException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/acmdb-lab0/simpledb/DbFile.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/acmdb-lab0/simpledb/DbFileIterator.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/acmdb-lab0/simpledb/DbIterator.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/acmdb-lab0/simpledb/DeadlockException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/acmdb-lab0/simpledb/Debug.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/acmdb-lab0/simpledb/Field.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/acmdb-lab0/simpledb/HeapFile.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/acmdb-lab0/simpledb/HeapFileEncoder.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/acmdb-lab0/simpledb/HeapPage.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/acmdb-lab0/simpledb/HeapPageId.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/acmdb-lab0/simpledb/IntField$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/acmdb-lab0/simpledb/IntField.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/acmdb-lab0/simpledb/LogFile.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/acmdb-lab0/simpledb/Page.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/acmdb-lab0/simpledb/PageId.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/acmdb-lab0/simpledb/Permissions.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/acmdb-lab0/simpledb/Predicate$Op.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/acmdb-lab0/simpledb/Predicate.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/acmdb-lab0/simpledb/RecordId.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/acmdb-lab0/simpledb/SeqScan.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/acmdb-lab0/simpledb/SimpleDb.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/acmdb-lab0/simpledb/StringField$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/acmdb-lab0/simpledb/StringField.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/acmdb-lab0/simpledb/TransactionAbortedException.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/acmdb-lab0/simpledb/TransactionId.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/acmdb-lab0/simpledb/Tuple.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/acmdb-lab0/simpledb/TupleDesc$TDItem.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/acmdb-lab0/simpledb/TupleDesc.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/acmdb-lab0/simpledb/TupleIterator.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/acmdb-lab0/simpledb/Type$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/acmdb-lab0/simpledb/Type$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/acmdb-lab0/simpledb/Type.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/acmdb-lab0/simpledb/Utility.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../azure-pipelines.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../azure-pipelines.yml" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/bin/src/" />
@@ -57,12 +13,20 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FindInProjectRecents">
+    <replaceStrings>
+      <replace />
+    </replaceStrings>
+    <dirStrings>
+      <dir>F:\School work\acmdb-lab0</dir>
+    </dirStrings>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="2176" />
-    <option name="y" value="76" />
+  <component name="ProjectFrameBounds">
+    <option name="x" value="2036" />
+    <option name="y" value="38" />
     <option name="width" value="1400" />
     <option name="height" value="1000" />
   </component>
@@ -72,6 +36,9 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
+      <pane id="PackagesPane" />
+      <pane id="Course" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -79,29 +46,15 @@
               <item name="acmdb-lab0" type="b2602c69:ProjectViewProjectNode" />
               <item name="acmdb-lab0" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="acmdb-lab0" type="b2602c69:ProjectViewProjectNode" />
-              <item name="acmdb-lab0" type="462c0819:PsiDirectoryNode" />
-              <item name="test" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="acmdb-lab0" type="b2602c69:ProjectViewProjectNode" />
-              <item name="acmdb-lab0" type="462c0819:PsiDirectoryNode" />
-              <item name="test" type="462c0819:PsiDirectoryNode" />
-              <item name="simpledb" type="462c0819:PsiDirectoryNode" />
-            </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
-      <pane id="Scope" />
-      <pane id="Course" />
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1585232487430" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/build.xml" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1585619538006" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../acmdb-lab1" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -164,37 +117,73 @@
     </task>
     <servers />
   </component>
+  <component name="TestHistory">
+    <history-entry file="TupleTest - 2020.03.26 at 22h 18m 10s.xml">
+      <configuration name="TupleTest" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="TupleTest - 2020.03.26 at 22h 18m 42s.xml">
+      <configuration name="TupleTest" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="CatalogTest - 2020.03.26 at 22h 18m 48s.xml">
+      <configuration name="CatalogTest" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="TupleTest - 2020.03.26 at 22h 18m 57s.xml">
+      <configuration name="TupleTest" configurationId="JUnit" />
+    </history-entry>
+  </component>
   <component name="ToolWindowManager">
-    <frame x="1912" y="-8" width="1936" height="1096" extended-state="6" />
+    <frame x="2036" y="38" width="1400" height="1000" extended-state="0" />
     <layout>
-      <window_info id="Image Layers" />
-      <window_info id="Designer" />
-      <window_info id="UI Designer" />
-      <window_info id="Capture Tool" />
-      <window_info id="Favorites" side_tool="true" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.25" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2925532" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info anchor="bottom" id="Educational.CheckDetails" />
-      <window_info anchor="bottom" id="Version Control" />
-      <window_info anchor="bottom" id="Terminal" />
-      <window_info anchor="bottom" id="Event Log" side_tool="true" />
-      <window_info anchor="bottom" id="Messages" />
+      <window_info id="Image Layers" order="2" />
+      <window_info id="Designer" order="3" />
+      <window_info id="UI Designer" order="4" />
+      <window_info id="Capture Tool" order="5" />
+      <window_info id="Favorites" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.32894737" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.32894737" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="right" id="Palette" />
-      <window_info anchor="right" id="Theme Preview" />
-      <window_info anchor="right" id="Maven" />
-      <window_info anchor="right" id="Capture Analysis" />
-      <window_info anchor="right" id="Palette&#9;" />
+      <window_info anchor="bottom" id="Version Control" order="7" />
+      <window_info anchor="bottom" id="Educational.CheckDetails" order="8" />
+      <window_info anchor="bottom" id="Terminal" order="9" />
+      <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
+      <window_info anchor="bottom" id="Messages" order="11" visible="true" weight="0.32894737" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
-      <window_info active="true" anchor="right" id="Ant Build" order="1" visible="true" weight="0.25" />
+      <window_info anchor="right" id="Ant Build" order="1" visible="true" weight="0.23024316" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Palette" order="3" />
+      <window_info anchor="right" id="Maven" order="4" />
+      <window_info anchor="right" id="Theme Preview" order="5" />
+      <window_info anchor="right" id="Capture Analysis" order="6" />
+      <window_info anchor="right" id="Palette&#9;" order="7" />
     </layout>
+  </component>
+  <component name="antWorkspaceConfiguration">
+    <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
+    <option name="FILTER_TARGETS" value="false" />
+    <buildFile url="file://$PROJECT_DIR$/build.xml">
+      <targetFilters>
+        <filter targetName="eclipse" isVisible="true" />
+        <filter targetName="compile" isVisible="true" />
+        <filter targetName="javadocs" isVisible="true" />
+        <filter targetName="dist" isVisible="true" />
+        <filter targetName="clean" isVisible="true" />
+        <filter targetName="testcompile" isVisible="true" />
+        <filter targetName="test" isVisible="true" />
+        <filter targetName="systemtest" isVisible="true" />
+        <filter targetName="runtest" isVisible="true" />
+        <filter targetName="runsystest" isVisible="true" />
+        <filter targetName="test-report" isVisible="true" />
+        <filter targetName="handin" isVisible="true" />
+        <filter targetName="test-and-handin" isVisible="true" />
+      </targetFilters>
+      <expanded value="true" />
+    </buildFile>
   </component>
   <component name="masterDetails">
     <states>
