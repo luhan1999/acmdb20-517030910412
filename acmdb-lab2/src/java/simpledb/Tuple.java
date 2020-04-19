@@ -118,4 +118,5 @@ public class Tuple implements Serializable {
         tupleDesc = td;
         fieldList = Arrays.asList(new Field[td.numFields()]);
     }
+
 }

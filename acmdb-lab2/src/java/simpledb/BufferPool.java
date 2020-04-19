@@ -2,6 +2,7 @@ package simpledb;
 
 import java.io.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -14,7 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * The BufferPool is also responsible for locking;  when a transaction fetches
  * a page, BufferPool checks that the transaction has the appropriate
  * locks to read/write the page.
- * 
+ *
  * @Threadsafe, all fields are final
  */
 public class BufferPool {
@@ -22,13 +23,15 @@ public class BufferPool {
     private static final int PAGE_SIZE = 4096;
 
     private static int pageSize = PAGE_SIZE;
-    
+
     /** Default number of pages passed to the constructor. This is used by
     other classes. BufferPool should use the numPages argument to the
     constructor instead. */
     public static final int DEFAULT_PAGES = 50;
 
-    private List<Page> pages;
+    private int capacity;
+    private ConcurrentHashMap<PageId, Page> pgBufferpool;
+    private ConcurrentHashMap<PageId, Integer> LRUmap;
     /**
      * Creates a BufferPool that caches up to numPages pages.
      *
@@ -36,23 +39,34 @@ public class BufferPool {
      */
     public BufferPool(int numPages) {
         // some code goes here
-        pages = Arrays.asList(new Page[numPages]);
+        capacity = numPages;
+        pgBufferpool = new ConcurrentHashMap<PageId, Page>();
+        LRUmap = new ConcurrentHashMap<PageId, Integer>();
     }
-    
+
     public static int getPageSize() {
       return pageSize;
     }
-    
+
     // THIS FUNCTION SHOULD ONLY BE USED FOR TESTING!!
     public static void setPageSize(int pageSize) {
     	BufferPool.pageSize = pageSize;
     }
-    
+
     // THIS FUNCTION SHOULD ONLY BE USED FOR TESTING!!
     public static void resetPageSize() {
     	BufferPool.pageSize = PAGE_SIZE;
     }
 
+    private void LRUupdate(PageId pid){
+        for (PageId key : LRUmap.keySet())
+        {
+            int tmp = LRUmap.get(key);
+            if (tmp > 0) LRUmap.put(key, tmp - 1);
+        }
+        LRUmap.put(pid, capacity);
+
+    }
     /**
      * Retrieve the specified page with the associated permissions.
      * Will acquire a lock and may block if that lock is held by another
@@ -71,18 +85,17 @@ public class BufferPool {
     public  Page getPage(TransactionId tid, PageId pid, Permissions perm)
         throws TransactionAbortedException, DbException {
         // some code goes here
-        int i = 0;
-        for (; i < pages.size(); i++){
-            Page page = pages.get(i);
-            if (page == null) {
-                break;
-            } else if (page.getId().equals(pid)){
-                return page;
-            }
+        Page page;
+        //I am so stupid to use contains which is equal to containsValue. Such a simple typo errer makes me mad!!
+        //make attention to the auto-completion!!!
+        if (pgBufferpool.containsKey(pid)){
+            page = pgBufferpool.get(pid);
+        } else{
+            if (pgBufferpool.size() >= capacity) evictPage();
+            page = Database.getCatalog().getDatabaseFile(pid.getTableId()).readPage(pid);
+            pgBufferpool.put(pid, page);
         }
-        if (i == pages.size()) throw new DbException("More than stored");
-        Page page = Database.getCatalog().getDatabaseFile(pid.getTableId()).readPage(pid);
-        pages.set(i, page);
+        LRUupdate(pid);
         return page;
     }
 
@@ -132,14 +145,14 @@ public class BufferPool {
 
     /**
      * Add a tuple to the specified table on behalf of transaction tid.  Will
-     * acquire a write lock on the page the tuple is added to and any other 
-     * pages that are updated (Lock acquisition is not needed for lab2). 
+     * acquire a write lock on the page the tuple is added to and any other
+     * pages that are updated (Lock acquisition is not needed for lab2).
      * May block if the lock(s) cannot be acquired.
-     * 
+     *
      * Marks any pages that were dirtied by the operation as dirty by calling
-     * their markDirty bit, and adds versions of any pages that have 
-     * been dirtied to the cache (replacing any existing versions of those pages) so 
-     * that future requests see up-to-date pages. 
+     * their markDirty bit, and adds versions of any pages that have
+     * been dirtied to the cache (replacing any existing versions of those pages) so
+     * that future requests see up-to-date pages.
      *
      * @param tid the transaction adding the tuple
      * @param tableId the table to add the tuple to
@@ -149,6 +162,17 @@ public class BufferPool {
         throws DbException, IOException, TransactionAbortedException {
         // some code goes here
         // not necessary for lab1
+        DbFile tableFile = Database.getCatalog().getDatabaseFile(tableId);
+        ArrayList<Page> affected_page = tableFile.insertTuple(tid, t);
+        for (Page page: affected_page){
+            PageId pid = page.getId();
+            if (!pgBufferpool.containsKey(pid) && pgBufferpool.size() >= capacity)
+                evictPage();
+            page.markDirty(true, tid);
+            pgBufferpool.put(pid, page);
+            LRUupdate(pid);
+        }
+
     }
 
     /**
@@ -157,9 +181,9 @@ public class BufferPool {
      * other pages that are updated. May block if the lock(s) cannot be acquired.
      *
      * Marks any pages that were dirtied by the operation as dirty by calling
-     * their markDirty bit, and adds versions of any pages that have 
-     * been dirtied to the cache (replacing any existing versions of those pages) so 
-     * that future requests see up-to-date pages. 
+     * their markDirty bit, and adds versions of any pages that have
+     * been dirtied to the cache (replacing any existing versions of those pages) so
+     * that future requests see up-to-date pages.
      *
      * @param tid the transaction deleting the tuple.
      * @param t the tuple to delete
@@ -168,6 +192,17 @@ public class BufferPool {
         throws DbException, IOException, TransactionAbortedException {
         // some code goes here
         // not necessary for lab1
+        int tableId = t.getRecordId().getPageId().getTableId();
+        DbFile tableFile = Database.getCatalog().getDatabaseFile(tableId);
+        ArrayList<Page> affected_page = tableFile.deleteTuple(tid, t);
+        for (Page page: affected_page){
+            PageId pid = page.getId();
+            if (!pgBufferpool.containsKey(pid) && pgBufferpool.size() >= capacity)
+                evictPage();
+            page.markDirty(true, tid);
+            pgBufferpool.put(pid, page);
+            LRUupdate(pid);
+        }
     }
 
     /**
@@ -178,20 +213,30 @@ public class BufferPool {
     public synchronized void flushAllPages() throws IOException {
         // some code goes here
         // not necessary for lab1
-
+        for (PageId pageId: pgBufferpool.keySet()){
+            flushPage(pageId);
+        }
     }
 
     /** Remove the specific page id from the buffer pool.
         Needed by the recovery manager to ensure that the
         buffer pool doesn't keep a rolled back page in its
         cache.
-        
+
         Also used by B+ tree files to ensure that deleted pages
         are removed from the cache so they can be reused safely
     */
     public synchronized void discardPage(PageId pid) {
         // some code goes here
         // not necessary for lab1
+        if (!pgBufferpool.containsKey(pid)) return;
+        try {
+            flushPage(pid);
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+        pgBufferpool.remove(pid);
+        LRUmap.remove(pid);
     }
 
     /**
@@ -201,6 +246,13 @@ public class BufferPool {
     private synchronized  void flushPage(PageId pid) throws IOException {
         // some code goes here
         // not necessary for lab1
+        Page page = pgBufferpool.get(pid);
+        if (page == null) throw new IOException();
+        if (page.isDirty() == null) return;
+        page.markDirty(false, null);
+        Database.getCatalog().getDatabaseFile(pid.getTableId()).writePage(page);
+
+
     }
 
     /** Write all pages of the specified transaction to disk.
@@ -217,6 +269,22 @@ public class BufferPool {
     private synchronized  void evictPage() throws DbException {
         // some code goes here
         // not necessary for lab1
+        int LRused = capacity;
+        PageId evict_pageId = null;
+        for (PageId pageId : LRUmap.keySet()){
+            if (LRUmap.get(pageId) <= LRused){
+                LRused = LRUmap.get(pageId);
+                evict_pageId = pageId;
+            }
+        }
+        if (evict_pageId == null) throw new DbException("none to evict");
+        try {
+            flushPage(evict_pageId);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        pgBufferpool.remove(evict_pageId);
+        LRUmap.remove(evict_pageId);
     }
 
 }
