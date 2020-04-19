@@ -1,0 +1,9 @@
+Testsuite: simpledb.HeapFileReadTest
+Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.678 sec
+
+Testcase: getId took 0.483 sec
+Testcase: numPages took 0.008 sec
+Testcase: getTupleDesc took 0.008 sec
+Testcase: readPage took 0.015 sec
+Testcase: testIteratorClose took 0.027 sec
+Testcase: testIteratorBasic took 0.021 sec

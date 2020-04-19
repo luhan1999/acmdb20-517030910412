@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite errors="0" failures="0" hostname="USER-CKQF2200MM" name="simpledb.systemtest.ScanTest" skipped="0" tests="2" time="1.406" timestamp="2020-04-04T14:22:05">
+  <properties>
+    <property name="java.vendor" value="Oracle Corporation" />
+    <property name="jarfile" value="F:\School work\acmdb-lab1\dist\simpledb.jar" />
+    <property name="sun.java.launcher" value="SUN_STANDARD" />
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers" />
+    <property name="dist" value="F:\School work\acmdb-lab1\dist" />
+    <property name="lib" value="F:\School work\acmdb-lab1\lib" />
+    <property name="os.name" value="Windows 10" />
+    <property name="sun.boot.class.path" value="F:\Java\jdk1.8.0_241\jre\lib\resources.jar;F:\Java\jdk1.8.0_241\jre\lib\rt.jar;F:\Java\jdk1.8.0_241\jre\lib\sunrsasign.jar;F:\Java\jdk1.8.0_241\jre\lib\jsse.jar;F:\Java\jdk1.8.0_241\jre\lib\jce.jar;F:\Java\jdk1.8.0_241\jre\lib\charsets.jar;F:\Java\jdk1.8.0_241\jre\lib\jfr.jar;F:\Java\jdk1.8.0_241\jre\classes" />
+    <property name="sun.desktop" value="windows" />
+    <property name="java.vm.specification.vendor" value="Oracle Corporation" />
+    <property name="ant.home" value="F:\IntelliJ IDEA Educational Edition 2018.3.1\lib\ant" />
+    <property name="java.runtime.version" value="1.8.0_241-b07" />
+    <property name="user.name" value="Administrator" />
+    <property name="user.language" value="zh" />
+    <property name="build" value="F:\School work\acmdb-lab1\bin" />
+    <property name="sun.boot.library.path" value="F:\Java\jdk1.8.0_241\jre\bin" />
+    <property name="ant.project.default-target" value="dist" />
+    <property name="ant.project.name" value="simpledb" />
+    <property name="java.version" value="1.8.0_241" />
+    <property name="user.timezone" value="" />
+    <property name="sun.arch.data.model" value="64" />
+    <property name="java.endorsed.dirs" value="F:\Java\jdk1.8.0_241\jre\lib\endorsed" />
+    <property name="doc" value="F:\School work\acmdb-lab1\javadoc" />
+    <property name="sun.cpu.isalist" value="amd64" />
+    <property name="sun.jnu.encoding" value="GBK" />
+    <property name="ant.file.simpledb" value="F:\School work\acmdb-lab1\build.xml" />
+    <property name="file.encoding.pkg" value="sun.io" />
+    <property name="build.src" value="F:\School work\acmdb-lab1\bin\src" />
+    <property name="file.separator" value="\" />
+    <property name="java.specification.name" value="Java Platform API Specification" />
+    <property name="java.class.version" value="52.0" />
+    <property name="src" value="F:\School work\acmdb-lab1\src" />
+    <property name="user.country" value="CN" />
+    <property name="java.home" value="F:\Java\jdk1.8.0_241\jre" />
+    <property name="java.vm.info" value="mixed mode" />
+    <property name="ant.file" value="F:\School work\acmdb-lab1\build.xml" />
+    <property name="os.version" value="10.0" />
+    <property name="test.reports" value="F:\School work\acmdb-lab1\testreport" />
+    <property name="path.separator" value=";" />
+    <property name="java.vm.version" value="25.241-b07" />
+    <property name="sourceversion" value="1.8" />
+    <property name="depcache" value="F:\School work\acmdb-lab1\bin\depcache" />
+    <property name="user.variant" value="" />
+    <property name="ant.library.dir" value="F:\IntelliJ IDEA Educational Edition 2018.3.1\lib\ant\lib" />
+    <property name="java.awt.printerjob" value="sun.awt.windows.WPrinterJob" />
+    <property name="sun.io.unicode.encoding" value="UnicodeLittle" />
+    <property name="awt.toolkit" value="sun.awt.windows.WToolkit" />
+    <property name="user.script" value="" />
+    <property name="user.home" value="C:\Users\Administrator" />
+    <property name="java.specification.vendor" value="Oracle Corporation" />
+    <property name="java.library.path" value="F:\Java\jdk1.8.0_241\jre\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;F:\Anaconda3;F:\Anaconda3\Library\mingw-w64\bin;F:\Anaconda3\Library\usr\bin;F:\Anaconda3\Library\bin;F:\Anaconda3\Scripts;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Users\Administrator\AppData\Local\Programs\Python\Python37;C:\Program Files\Git\cmd;C:\texlive\2018\bin\win32;C:\Users\Administrator\AppData\Local\Programs\Python\Python37\Scripts\;C:\Users\Administrator\AppData\Local\Programs\Python\Python37\;C:\Users\Administrator\AppData\Local\Microsoft\WindowsApps;;." />
+    <property name="java.vendor.url" value="http://java.oracle.com/" />
+    <property name="java.vm.vendor" value="Oracle Corporation" />
+    <property name="java.runtime.name" value="Java(TM) SE Runtime Environment" />
+    <property name="sun.java.command" value="org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner simpledb.systemtest.ScanTest skipNonTests=false filtertrace=true haltOnError=false haltOnFailure=false formatter=org.apache.tools.ant.taskdefs.optional.junit.SummaryJUnitResultFormatter showoutput=false outputtoformatters=true logfailedtests=true threadid=0 logtestlistenerevents=false formatter=org.apache.tools.ant.taskdefs.optional.junit.PlainJUnitResultFormatter formatter=org.apache.tools.ant.taskdefs.optional.junit.XMLJUnitResultFormatter,F:\School work\acmdb-lab1\testreport\TEST-simpledb.systemtest.ScanTest.xml formatter=org.apache.tools.ant.taskdefs.optional.junit.PlainJUnitResultFormatter,F:\School work\acmdb-lab1\testreport\TEST-simpledb.systemtest.ScanTest.txt crashfile=F:\School work\acmdb-lab1\junitvmwatcher6075430669913724282.properties propsfile=F:\School work\acmdb-lab1\junit3199156281822433314.properties" />
+    <property name="java.class.path" value="F:\School work\acmdb-lab1\bin\src;F:\School work\acmdb-lab1\bin\test;F:\School work\acmdb-lab1\lib\junit-4.5.jar;F:\IntelliJ IDEA Educational Edition 2018.3.1\lib\ant\lib\ant-launcher.jar;F:\IntelliJ IDEA Educational Edition 2018.3.1\lib\ant\lib\ant.jar;F:\IntelliJ IDEA Educational Edition 2018.3.1\lib\ant\lib\ant-junit.jar;F:\IntelliJ IDEA Educational Edition 2018.3.1\lib\ant\lib\ant-junit4.jar" />
+    <property name="ant.version" value="Apache Ant(TM) version 1.9.4 compiled on April 29 2014" />
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification" />
+    <property name="ant.file.type" value="file" />
+    <property name="java.vm.specification.version" value="1.8" />
+    <property name="sun.cpu.endian" value="little" />
+    <property name="sun.os.patch.level" value="" />
+    <property name="compile.debug" value="true" />
+    <property name="java.io.tmpdir" value="C:\Users\ADMINI~1\AppData\Local\Temp\" />
+    <property name="java.vendor.url.bug" value="http://bugreport.sun.com/bugreport/" />
+    <property name="os.arch" value="amd64" />
+    <property name="java.awt.graphicsenv" value="sun.awt.Win32GraphicsEnvironment" />
+    <property name="java.ext.dirs" value="F:\Java\jdk1.8.0_241\jre\lib\ext;C:\WINDOWS\Sun\Java\lib\ext" />
+    <property name="testd" value="F:\School work\acmdb-lab1\test" />
+    <property name="user.dir" value="F:\School work\acmdb-lab1" />
+    <property name="line.separator" value="&#xd;&#xa;" />
+    <property name="java.vm.name" value="Java HotSpot(TM) 64-Bit Server VM" />
+    <property name="basedir" value="F:\School work\acmdb-lab1" />
+    <property name="ant.java.version" value="1.8" />
+    <property name="ant.core.lib" value="F:\IntelliJ IDEA Educational Edition 2018.3.1\lib\ant\lib\ant.jar" />
+    <property name="file.encoding" value="GBK" />
+    <property name="build.test" value="F:\School work\acmdb-lab1\bin\test" />
+    <property name="java.specification.version" value="1.8" />
+    <property name="ant.project.invoked-targets" value="test-report" />
+    <property name="ant.file.type.simpledb" value="file" />
+  </properties>
+  <testcase classname="simpledb.systemtest.ScanTest" name="testCache" time="0.682" />
+  <testcase classname="simpledb.systemtest.ScanTest" name="testSmall" time="0.629" />
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
