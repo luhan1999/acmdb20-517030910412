@@ -80,19 +80,7 @@ public class HeapFile implements DbFile {
         return page;
     }
 
-    // see DbFile.java for javadocs
-//    public void writePage(Page page) throws IOException {
-//        // some code goes here
-//        // not necessary for lab1
-//        PageId pid = page.getId();
-//        try {
-//            RandomAccessFile randomAccessFile = new RandomAccessFile(file, "rw");
-//            randomAccessFile.seek(pid.pageNumber() * BufferPool.getPageSize());
-//            randomAccessFile.write(page.getPageData());
-//        } catch (IOException e) {
-//            throw new IllegalArgumentException();
-//        }
-//    }
+
     public void writePage(Page page) throws IOException {
         // some code goes here
         // not necessary for lab1
