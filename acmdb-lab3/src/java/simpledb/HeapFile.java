@@ -216,60 +216,6 @@ public class HeapFile implements DbFile {
         return new HeapFileIterator(tid);
     }
 
-//    public DbFileIterator iterator(TransactionId tid) {
-//        // some code goes here
-//        DbFileIterator heapFileIterator = new DbFileIterator() {
-//            private int currentPid;
-//            private Iterator<Tuple> tupleIterator;
-//
-//            @Override
-//            public void open() throws DbException, TransactionAbortedException {
-//                reset();
-//            }
-//
-//            @Override
-//            public boolean hasNext() throws DbException, TransactionAbortedException {
-//                if (tupleIterator == null) return false;
-//                while (!tupleIterator.hasNext() && currentPid < numPages() - 1) {
-//                    ++currentPid;
-//                    PageId pageId = new HeapPageId(getId(), currentPid);
-//                    HeapPage currentPage = (HeapPage) Database.getBufferPool().getPage(tid, pageId, Permissions.READ_ONLY);
-//                    tupleIterator = currentPage.iterator();
-//                }
-//                return tupleIterator.hasNext();
-//            }
-//
-//            @Override
-//            public Tuple next() throws DbException, TransactionAbortedException, NoSuchElementException {
-//                if (tupleIterator == null) throw new NoSuchElementException();
-//
-//                Tuple tup = tupleIterator.next();
-//
-//                return tup;
-//            }
-//
-//            @Override
-//            public void rewind() throws DbException, TransactionAbortedException {
-//                reset();
-//            }
-//            private void reset() throws DbException, TransactionAbortedException {
-//                currentPid = 0;
-//                PageId pageId = new HeapPageId(getId(), currentPid);
-//                HeapPage currentPage = (HeapPage) Database.getBufferPool().getPage(tid, pageId, Permissions.READ_ONLY);
-//                tupleIterator = currentPage.iterator();
-//            }
-//
-//            @Override
-//            public void close() {
-//                currentPid = 0;
-//                tupleIterator = null;
-//            }
-//        };
-//
-//        return heapFileIterator;
-//    }
-
-
 
 }
 
