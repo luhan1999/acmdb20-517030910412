@@ -166,8 +166,7 @@ public class HeapFile implements DbFile {
 //            // has next page
 //            if (currentPid < numPages() - 1) return true;
             //Modify from lab1 because of the delete may change the struct so we need to transverse all pages
-            while (currentPid < numPages() - 1){
-                if (tupleIterator.hasNext()) return true;
+            while (!tupleIterator.hasNext() && currentPid < numPages() - 1){
                 currentPid ++;
                 PageId pageId = new HeapPageId(getId(), currentPid);
                 tupleIterator = ((HeapPage) Database.getBufferPool().getPage(tid, pageId, Permissions.READ_ONLY)).iterator();
