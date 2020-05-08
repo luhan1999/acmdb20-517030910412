@@ -54,9 +54,9 @@ public class Delete extends Operator {
 
     public void close() {
         // some code goes here
-        Count = -1;
         child.close();
         super.close();
+        Count = -1;
     }
 
     public void rewind() throws DbException, TransactionAbortedException {
