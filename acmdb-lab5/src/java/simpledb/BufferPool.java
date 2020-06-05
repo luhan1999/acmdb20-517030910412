@@ -127,19 +127,19 @@ public class BufferPool {
         //If deadlock(cycle) return true else return false
         synchronized boolean checkDeadlock(TransactionId tid){
             visit.clear();
-            boolean flag = dfs(tid);
-            return flag;
+            return dfs(tid, tid);
         }
 
-        synchronized boolean dfs(TransactionId tid){
+        boolean dfs(TransactionId tid, TransactionId st){
             visit.add(tid);
             Set<TransactionId> edges = TidToEdge.get(tid);
+            if (edges == null) return false;
             boolean flag = false;
             for (TransactionId nextTid : edges){
-                if (visit.contains(nextTid)){
-                    return true;
+                if (nextTid.equals(st)) return true;
+                if (!visit.contains(nextTid)){
+                    flag = flag || dfs(nextTid, st);
                 }
-                flag = flag || dfs(nextTid);
             }
             return flag;
         }
