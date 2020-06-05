@@ -1,10 +1,9 @@
 package simpledb;
 
+import javax.xml.crypto.Data;
 import java.io.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -18,6 +17,75 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * @Threadsafe, all fields are final
  */
+
+class PageLock{
+    public PageId pageId;
+    private Set<TransactionId> sharedLocks;
+    private TransactionId exclusiveLock;
+
+    PageLock(PageId pid){
+        pageId = pid;
+        sharedLocks =  Collections.synchronizedSet(new HashSet<>());
+        exclusiveLock = null;
+    }
+
+    PageId getPageId(){
+        return pageId;
+    }
+
+    Set<TransactionId> getSharedLocks(){
+        return sharedLocks;
+    }
+
+    TransactionId getExclusiveLock(){
+        return exclusiveLock;
+    }
+
+    boolean applyLock(Permissions perm, TransactionId tid){
+        if (perm.equals(Permissions.READ_ONLY))
+        //read_only for shared locks
+        {
+            //check exclusive
+            if (exclusiveLock != null) return exclusiveLock.equals(tid);
+            sharedLocks.add(tid);
+            return true;
+        }
+        //need exclusiveLock
+        else {
+            if (exclusiveLock != null) return exclusiveLock.equals(tid);
+            if (sharedLocks.size() > 1) return false;
+            if (sharedLocks.isEmpty() || sharedLocks.contains(tid)){
+                exclusiveLock = tid;
+                sharedLocks.clear();
+                return true;
+            }
+            return false;
+        }
+    }
+
+    void releaseLock(TransactionId tid){
+        assert exclusiveLock == null || tid.equals(exclusiveLock);
+        if (tid.equals(exclusiveLock)) exclusiveLock = null;
+        else sharedLocks.remove(tid);
+    }
+
+    boolean holdsLock(TransactionId tid){
+        return exclusiveLock.equals(tid) || sharedLocks.contains(tid);
+    }
+
+    boolean exclusive() {
+        return exclusiveLock != null;
+    }
+
+    Set<TransactionId> relatedTransactions(){
+        Set<TransactionId> transactionIds = new HashSet<>(sharedLocks);
+        if (exclusiveLock != null)
+            transactionIds.add(exclusiveLock);
+        return  transactionIds;
+    }
+}
+
+
 public class BufferPool {
     /** Bytes per page, including header. */
     private static final int PAGE_SIZE = 4096;
@@ -32,6 +100,51 @@ public class BufferPool {
     private int capacity;
     private ConcurrentHashMap<PageId, Page> pgBufferpool;
     private ConcurrentHashMap<PageId, Integer> LRUmap;
+
+    private ConcurrentHashMap<PageId, PageLock> PageIdToLock;
+    private ConcurrentHashMap<TransactionId, Set<PageId>> TidToPageId;
+    private DependencyGraph dependencyGraph;
+
+    //Detect the Deadlock
+    private class DependencyGraph{
+
+        private ConcurrentHashMap<TransactionId, Set<TransactionId>> TidToEdge = new ConcurrentHashMap<>();
+        private Set<TransactionId> visit = Collections.synchronizedSet(new HashSet<>());
+
+        synchronized void modifyEdges(TransactionId tid, PageId pid){
+            TidToEdge.putIfAbsent(tid, new HashSet<>());
+            Set<TransactionId> edges = TidToEdge.get(tid);
+            edges.clear();
+            if (pid == null) return;
+
+            Set<TransactionId> pidToTidlist;
+            synchronized (PageIdToLock.get(pid)){
+                pidToTidlist = PageIdToLock.get(pid).relatedTransactions();
+            }
+            edges.addAll(pidToTidlist);
+        }
+
+        //If deadlock(cycle) return true else return false
+        synchronized boolean checkDeadlock(TransactionId tid){
+            visit.clear();
+            boolean flag = dfs(tid);
+            return flag;
+        }
+
+        synchronized boolean dfs(TransactionId tid){
+            visit.add(tid);
+            Set<TransactionId> edges = TidToEdge.get(tid);
+            boolean flag = false;
+            for (TransactionId nextTid : edges){
+                if (visit.contains(nextTid)){
+                    return true;
+                }
+                flag = flag || dfs(nextTid);
+            }
+            return flag;
+        }
+    }
+
     /**
      * Creates a BufferPool that caches up to numPages pages.
      *
@@ -40,8 +153,13 @@ public class BufferPool {
     public BufferPool(int numPages) {
         // some code goes here
         capacity = numPages;
-        pgBufferpool = new ConcurrentHashMap<PageId, Page>();
-        LRUmap = new ConcurrentHashMap<PageId, Integer>();
+        pgBufferpool = new ConcurrentHashMap<>();
+        LRUmap = new ConcurrentHashMap<>();
+
+        PageIdToLock = new ConcurrentHashMap<>();
+        TidToPageId = new ConcurrentHashMap<>();
+        dependencyGraph = new DependencyGraph();
+
     }
 
     public static int getPageSize() {
@@ -65,8 +183,8 @@ public class BufferPool {
             if (tmp > 0) LRUmap.put(key, tmp - 1);
         }
         LRUmap.put(pid, capacity);
-
     }
+
     /**
      * Retrieve the specified page with the associated permissions.
      * Will acquire a lock and may block if that lock is held by another
@@ -82,22 +200,42 @@ public class BufferPool {
      * @param pid the ID of the requested page
      * @param perm the requested permissions on the page
      */
-    public  Page getPage(TransactionId tid, PageId pid, Permissions perm)
+    public Page getPage(TransactionId tid, PageId pid, Permissions perm)
         throws TransactionAbortedException, DbException {
         // some code goes here
+        PageIdToLock.putIfAbsent(pid, new PageLock(pid));
+        boolean applyLock;
+        synchronized (PageIdToLock.get(pid)){
+            applyLock = PageIdToLock.get(pid).applyLock(perm, tid);
+        }
+        while (!applyLock) {
+            dependencyGraph.modifyEdges(tid, pid);
+            if (dependencyGraph.checkDeadlock(tid)) {
+                throw new TransactionAbortedException();
+            }
+            synchronized (PageIdToLock.get(pid)){
+                applyLock = PageIdToLock.get(pid).applyLock(perm, tid);
+            }
+        }
+        dependencyGraph.modifyEdges(tid, null);
+
+        TidToPageId.putIfAbsent(tid, new HashSet<>());
+        TidToPageId.get(tid).add(pid);
         Page page;
-        //I am so stupid to use contains which is equal to containsValue. Such a simple typo errer makes me mad!!
-        //make attention to the auto-completion!!!
         if (pgBufferpool.containsKey(pid)){
             page = pgBufferpool.get(pid);
         } else{
             if (pgBufferpool.size() >= capacity) evictPage();
             page = Database.getCatalog().getDatabaseFile(pid.getTableId()).readPage(pid);
             pgBufferpool.put(pid, page);
+            //New page into the bufferpool should record Before statue
+            page.setBeforeImage();
         }
-        LRUupdate(pid);
+//      LRUupdate(pid);
         return page;
     }
+
+
 
     /**
      * Releases the lock on a page.
@@ -108,10 +246,16 @@ public class BufferPool {
      * @param tid the ID of the transaction requesting the unlock
      * @param pid the ID of the page to unlock
      */
-    public  void releasePage(TransactionId tid, PageId pid) {
+    public void releasePage(TransactionId tid, PageId pid) {
         // some code goes here
         // not necessary for lab1|lab2
+
+        synchronized (PageIdToLock.get(pid)){
+            PageIdToLock.get(pid).releaseLock(tid);
+        }
+        TidToPageId.get(tid).remove(pid);
     }
+
 
     /**
      * Release all locks associated with a given transaction.
@@ -121,13 +265,16 @@ public class BufferPool {
     public void transactionComplete(TransactionId tid) throws IOException {
         // some code goes here
         // not necessary for lab1|lab2
+        transactionComplete(tid, true);
     }
 
     /** Return true if the specified transaction has a lock on the specified page */
     public boolean holdsLock(TransactionId tid, PageId p) {
         // some code goes here
         // not necessary for lab1|lab2
-        return false;
+        synchronized (PageIdToLock.get(p)){
+            return PageIdToLock.get(p).holdsLock(tid);
+        }
     }
 
     /**
@@ -141,6 +288,30 @@ public class BufferPool {
         throws IOException {
         // some code goes here
         // not necessary for lab1|lab2
+        Set<PageId> LockPages = TidToPageId.get(tid);
+        TidToPageId.remove(tid);
+        if (LockPages == null) return;
+        for (PageId pid: LockPages){
+
+            Page page = pgBufferpool.get(pid);
+            if (page != null && PageIdToLock.get(pid).exclusive()){
+                // FORCE buffer management policy
+                // If commit = true we force the dirty pages to disk
+                // If commit = false, It means abort and we recover from before image
+                if (commit) {
+                    if (page.isDirty() != null){
+                        flushPage(pid);
+                        page.setBeforeImage();
+                    }
+                } else {
+                    assert page.getBeforeImage() != null;
+                    pgBufferpool.put(pid, page.getBeforeImage());
+                }
+            }
+            synchronized (PageIdToLock.get(pid)){
+                PageIdToLock.get(pid).releaseLock(tid);
+            }
+        }
     }
 
     /**
@@ -163,16 +334,12 @@ public class BufferPool {
         // some code goes here
         // not necessary for lab1
         DbFile tableFile = Database.getCatalog().getDatabaseFile(tableId);
-        ArrayList<Page> affected_page = tableFile.insertTuple(tid, t);
-        for (Page page: affected_page){
+        ArrayList<Page> dirty_pages = tableFile.insertTuple(tid,t);
+        for (Page page : dirty_pages) {
             PageId pid = page.getId();
-            if (!pgBufferpool.containsKey(pid) && pgBufferpool.size() >= capacity)
-                evictPage();
             page.markDirty(true, tid);
             pgBufferpool.put(pid, page);
-            LRUupdate(pid);
         }
-
     }
 
     /**
@@ -188,22 +355,20 @@ public class BufferPool {
      * @param tid the transaction deleting the tuple.
      * @param t the tuple to delete
      */
-    public  void deleteTuple(TransactionId tid, Tuple t)
+    public void deleteTuple(TransactionId tid, Tuple t)
         throws DbException, IOException, TransactionAbortedException {
         // some code goes here
         // not necessary for lab1
         int tableId = t.getRecordId().getPageId().getTableId();
         DbFile tableFile = Database.getCatalog().getDatabaseFile(tableId);
-        ArrayList<Page> affected_page = tableFile.deleteTuple(tid, t);
-        for (Page page: affected_page){
+        ArrayList<Page> dirty_pages = tableFile.deleteTuple(tid, t);
+        for (Page page : dirty_pages) {
             PageId pid = page.getId();
-            if (!pgBufferpool.containsKey(pid) && pgBufferpool.size() >= capacity)
-                evictPage();
             page.markDirty(true, tid);
             pgBufferpool.put(pid, page);
-            LRUupdate(pid);
         }
     }
+
 
     /**
      * Flush all dirty pages to disk.
@@ -229,14 +394,15 @@ public class BufferPool {
     public synchronized void discardPage(PageId pid) {
         // some code goes here
         // not necessary for lab1
-        if (!pgBufferpool.containsKey(pid)) return;
-        try {
-            flushPage(pid);
-        } catch (IOException e){
-            e.printStackTrace();
-        }
+//        if (!pgBufferpool.containsKey(pid)) return;
+//        try {
+//            flushPage(pid);
+//        } catch (IOException e){
+//            e.printStackTrace();
+//        }
+//        pgBufferpool.remove(pid);
+//        LRUmap.remove(pid);
         pgBufferpool.remove(pid);
-        LRUmap.remove(pid);
     }
 
     /**
@@ -246,45 +412,45 @@ public class BufferPool {
     private synchronized  void flushPage(PageId pid) throws IOException {
         // some code goes here
         // not necessary for lab1
+
         Page page = pgBufferpool.get(pid);
         if (page == null) throw new IOException();
         if (page.isDirty() == null) return;
         page.markDirty(false, null);
         Database.getCatalog().getDatabaseFile(pid.getTableId()).writePage(page);
-
-
     }
 
     /** Write all pages of the specified transaction to disk.
      */
-    public synchronized  void flushPages(TransactionId tid) throws IOException {
+    public synchronized void flushPages(TransactionId tid) throws IOException {
         // some code goes here
         // not necessary for lab1|lab2
+//        Set<PageId> pageIdSet = TidToPageId.get(tid);
+//        for (PageId pageId : pageIdSet){
+//            flushPage(pageId);
+//        }
     }
 
     /**
      * Discards a page from the buffer pool.
      * Flushes the page to disk to ensure dirty pages are updated on disk.
      */
-    private synchronized  void evictPage() throws DbException {
+    private synchronized void evictPage() throws DbException {
         // some code goes here
         // not necessary for lab1
-        int LRused = capacity;
-        PageId evict_pageId = null;
-        for (PageId pageId : LRUmap.keySet()){
-            if (LRUmap.get(pageId) <= LRused){
-                LRused = LRUmap.get(pageId);
-                evict_pageId = pageId;
+        // In particular, it must never evict a dirty page.
+        for (Map.Entry<PageId, Page> entry : pgBufferpool.entrySet()) {
+            PageId pid = entry.getKey();
+            Page   page   = entry.getValue();
+            if (page.isDirty() == null) {
+                // dont need to flushpage since all page evicted are not dirty
+                // flushPage(pid);
+                discardPage(pid);
+                return;
             }
         }
-        if (evict_pageId == null) throw new DbException("none to evict");
-        try {
-            flushPage(evict_pageId);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        pgBufferpool.remove(evict_pageId);
-        LRUmap.remove(evict_pageId);
+        throw new DbException("NO STEAL POLICY failed because all pages are dirty");
     }
 
 }
+
